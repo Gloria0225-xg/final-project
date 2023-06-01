@@ -66,11 +66,11 @@ ui <- navbarPage(
                            selectize = TRUE,
                            multiple = FALSE,
                            selected = "Clothing"),
-               sliderInput(inputId = "PriceSelection2", 
-                           label = " Price range", 
+               sliderInput(inputId = "SellingCount", 
+                           label = "Selling Count", 
                            min = min(0), 
-                           max = max(120), 
-                           value = c(0, 120))
+                           max = max(180), 
+                           value = c(0, 180))
              ),
              mainPanel(
                plotlyOutput("colorPlot"),
