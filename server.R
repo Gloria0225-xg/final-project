@@ -12,11 +12,12 @@ count_data <- adi_df %>%
 
 #Steven
 new_df <- adi_df %>% 
-  group_by(category, color) %>% 
-  summarise(Ave_price = mean(selling_price))
+  mutate(type = sapply(strsplit(adi_df$breadcrumbs, "/"), function(x) x[1])) %>% 
+  count(category, type) %>% 
+  rename(Count = n)
 
 
-#Frank
+  #Frank
 count_price_data <- adi_df %>% 
   count(category, selling_price) %>% 
   rename(Category = category, Price = selling_price, Count = n)
@@ -72,16 +73,18 @@ server <- function(input, output, session) {
     
     steven_df <- new_df %>% 
       filter(category == input$CategorySelection2) %>%
-      filter(Ave_price >= input$PriceSelection2[1] & Ave_price <= input$PriceSelection2[2])
+      filter(Count >= input$SellingCount[1] & Count <= input$SellingCount[2])
     
     color_plot <- ggplot(data = steven_df) +
                   geom_col(mapping = 
-                             aes(x = color,
-                                 y = Ave_price)) +
-                  labs(title = paste("Average Price for different color in: ", input$CategorySelection2),
-                       x = "Colors",
-                       y = "Average Price",
-                       fill = "blue")
+                             aes(x = type,
+                                 y = Count,
+                                 fill = type)) +
+                  labs(title = paste("Selling Count for different Products in:", input$CategorySelection2),
+                       x = "Product Types",
+                       y = "Selling Count",
+                       #fill = "type"
+                       )
           
     
     color_plotly <- ggplotly(color_plot)
